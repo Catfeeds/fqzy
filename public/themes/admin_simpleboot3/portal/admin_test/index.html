@@ -1,0 +1,38 @@
+<include file="public@header"/>
+<style type="text/css">
+    .pic-list li {
+        margin-bottom: 5px;
+    }
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:;">excel导入</a></li>
+    </ul>
+    <!--<form action="{:url('AdminTest/indexPost')}" method="post" class="form-horizontal js-ajax-form margin-top-20">-->
+    <form action="{:url('AdminTest/indexPost')}" method="post" class="form-horizontal margin-top-20" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-9">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>文件<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="file" name="data" required/>
+                        </td>
+                    </tr>
+
+                </table>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <!--<button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>-->
+                        <button type="submit" class="btn btn-primary">{:lang('ADD')}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

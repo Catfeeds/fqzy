@@ -1,0 +1,190 @@
+<include file="public@header"/>
+<style type="text/css">
+    .pic-list li {
+        margin-bottom: 5px;
+    }
+</style>
+<script type="text/html" id="photos-item-tpl">
+    <li id="saved-image{id}">
+        <input id="photo-{id}" type="hidden" name="title_pic[]" value="{filepath}">
+        <img id="photo-{id}-preview" src="{url}" style="height:36px;width: 36px;"
+             onclick="imagePreviewDialog(this.src);">
+        <a href="javascript:uploadOneImage('图片上传','#photo-{id}');">替换</a>
+        <a href="javascript:(function(){$('#saved-image{id}').remove();})();">移除</a>
+    </li>
+</script>
+
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('AdminAsk/index')}">全部题目</a></li>
+        <li class="active"><a>编辑题目</a></li>
+    </ul>
+    <form action="{:url('AdminAsk/editPost')}" method="post" class="form-horizontal js-ajax-form margin-top-20">
+        <!--<form action="{:url('AdminAsk/editPost')}" method="post" class="form-horizontal margin-top-20">-->
+        <div class="row">
+            <div class="col-md-9">
+                <table class="table table-bordered">
+                    <tr>
+                        <th width="100">分类<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" style="width:400px;" required value="{$info.name}"
+                                   placeholder="请选择分类" onclick="doSelectCategory();" id="js-categories-name-input"
+                                   readonly/>
+                            <input class="form-control" type="hidden" value="{$info.cate_id}" name="cate_id"
+                                   id="js-categories-id-input"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>题号<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="number" name="sort" required value="{$info.sort}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>文字题目<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="title_text" required value="{$info.title_text}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>图片题目</th>
+                        <td>
+                            <ul id="photos" class="pic-list list-unstyled form-inline">
+                                <notempty name="info.title_pic">
+                                    <foreach name="info.title_pic" item="vo">
+                                        <php>$img_url=cmf_get_image_preview_url($vo);</php>
+                                        <li id="saved-image{$key}">
+                                            <input id="photo-{$key}" type="hidden" name="title_pic[]"
+                                                   value="{$vo}">
+                                            <img id="photo-{$key}-preview"
+                                                 src="{:cmf_get_image_preview_url($vo)}"
+                                                 style="height:36px;width: 36px;"
+                                                 onclick="parent.imagePreviewDialog(this.src);">
+                                            <a href="javascript:uploadOneImage('图片上传','#photo-{$key}');">替换</a>
+                                            <a href="javascript:(function(){$('#saved-image{$key}').remove();})();">移除</a>
+                                        </li>
+                                    </foreach>
+                                </notempty>
+                            </ul>
+                            <a href="javascript:uploadMultiImage('图片上传','#photos','photos-item-tpl');"
+                               class="btn btn-sm btn-default">选择图片</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>答案解析<span class="form-required">*</span></th>
+                        <td>
+                            <textarea class="form-control" name="analysis_content" style="height: 50px;" required>{$info.analysis_content}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>提示</th>
+                        <td>
+                            <span class="form-required">请在正确答案前打点儿</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><input type="radio" name="right_option" value=0 <eq name="$info['option_id']" value="$info['option'][0]['id']">checked</eq>>选项1<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="option_content[]" required value="{$info['option'][0]['option_content']}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><input type="radio" name="right_option" value=1 <eq name="$info['option_id']" value="$info['option'][1]['id']">checked</eq>>选项2<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="option_content[]" required value="{$info['option'][1]['option_content']}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><input type="radio" name="right_option" value=2 <eq name="$info['option_id']" value="$info['option'][2]['id']">checked</eq>>选项3<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="option_content[]" required value="{$info['option'][2]['option_content']}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><input type="radio" name="right_option" value=3 <eq name="$info['option_id']" value="$info['option'][3]['id']">checked</eq>>选项4<span class="form-required"></span></th>
+                        <td>
+                            <input class="form-control" type="text" name="option_content[]" required value="{$info['option'][3]['option_content']}" />
+                        </td>
+                    </tr>
+
+                </table>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <input type="hidden" name="id" value={$info.aid}>
+                        <input type="hidden" name="option_type" value={$info.option_type}>
+                        <button type="submit" class="btn btn-primary js-ajax-submit">更新</button>
+                        <!--<button type="submit" class="btn btn-primary">更新</button>-->
+                        <a class="btn btn-default" href="{:url('AdminAsk/index')}">{:lang('BACK')}</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript">
+    //编辑器路径定义
+    var editorURL = GV.WEB_ROOT;
+</script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+
+        editorcontent = new baidu.editor.ui.Editor();
+        editorcontent.render('content');
+        try {
+            editorcontent.sync();
+        } catch (err) {
+        }
+
+        $('.btn-cancel-thumbnail').click(function () {
+            $('#thumbnail-preview').attr('src', '__TMPL__/public/assets/images/default-thumbnail.png');
+            $('#thumbnail').val('');
+        });
+
+    });
+
+    function doSelectCategory() {
+        var selectedCategoriesId = $('#js-categories-id-input').val();
+        openIframeLayer("{:url('AdminCategory/select')}?ids=" + selectedCategoriesId, '请选择分类', {
+            area: ['700px', '400px'],
+            btn: ['确定', '取消'],
+            yes: function (index, layero) {
+                //do something
+
+                var iframeWin          = window[layero.find('iframe')[0]['name']];
+                var selectedCategories = iframeWin.confirm();
+                if (selectedCategories.selectedCategoriesId.length == 0) {
+                    layer.msg('请选择分类');
+                    return;
+                }
+                var cate_id = selectedCategories.selectedCategoriesId['0'];
+                $.ajax({
+                    type:"POST",
+                    url:"{:url('Portal/AdminPcate/if_two_cate')}",
+                    data:{
+                        "cate_id":cate_id,
+                    },
+                    success:function (data) {
+                        if(data == 1){
+                            layer.msg('请选择二级分类');
+                            return false;
+                        }else{
+                            $('#js-categories-id-input').val(selectedCategories.selectedCategoriesId.join(','));
+                            $('#js-categories-name-input').val(selectedCategories.selectedCategoriesName.join(' '));
+                            //console.log(layer.getFrameIndex(index));
+                            layer.close(index); //如果设定了yes回调，需进行手工关闭
+                        }
+                    }
+                })
+
+            }
+        });
+    }
+</script>
+</body>
+</html>

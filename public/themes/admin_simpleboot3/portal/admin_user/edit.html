@@ -1,0 +1,58 @@
+<include file="public@header" />
+</head>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('AdminUser/index')}">全部会员</a></li>
+        <li class="active"><a>修改会员信息</a></li>
+    </ul>
+    <form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('AdminUser/editPost')}">
+        <div class="form-group">
+            <label for="input-user_login" class="col-sm-2 control-label"><span class="form-required">*</span>用户名</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" id="input-user_login" name="username" value="{$info.username}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-mobile" class="col-sm-2 control-label"><span class="form-required">*</span>手机号</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" id="input-mobile" name="mobile" value="{$info.mobile}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-company" class="col-sm-2 control-label"><span class="form-required">*</span>公司</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" id="input-company" name="company" value="{$info.company}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-create_time" class="col-sm-2 control-label"><span class="form-required">*</span>注册时间</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" id="input-create_time" name="create_time" value="{$info.create_time}" readonly>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-last_login_time" class="col-sm-2 control-label"><span class="form-required">*</span>上次登录时间</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" id="input-last_login_time" name="last_login_time" value="{$info.last_login_time}" readonly>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-last_login_ip" class="col-sm-2 control-label"><span class="form-required">*</span>上次登录ip</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" id="input-last_login_ip" name="last_login_ip" value="{$info.last_login_ip}" readonly>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="hidden" name="id" value="{$info.id}">
+                <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('SAVE')}</button>
+                <a class="btn btn-default" href="{:url('AdminUser/index')}">{:lang('BACK')}</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>
