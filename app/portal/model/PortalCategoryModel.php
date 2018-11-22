@@ -75,10 +75,16 @@ class PortalCategoryModel extends Model
         }
 
         $newCategories = [];
+
         foreach ($categories as $item) {
             $item['checked'] = in_array($item['id'], $currentIds) ? "checked" : "";
             $item['url']     = cmf_url('portal/List/index', ['id' => $item['id']]);;
-            $item['str_action'] = '<a href="' . url("AdminCategory/add", ["parent" => $item['id']]) . '">添加子分类</a>  <a href="' . url("AdminCategory/edit", ["id" => $item['id']]) . '">' . lang('EDIT') . '</a>  <a class="js-ajax-delete" href="' . url("AdminCategory/delete", ["id" => $item['id']]) . '">' . lang('DELETE') . '</a> ';
+            if($item['parent_id'] == 0){
+                $item['str_action'] = '<a href="' . url("AdminCategory/add", ["parent" => $item['id']]) . '">添加子分类</a>  <a href="' . url("AdminCategory/edit", ["id" => $item['id']]) . '">' . lang('EDIT') . '</a>  <a class="js-ajax-delete" href="' . url("AdminCategory/delete", ["id" => $item['id']]) . '">' . lang('DELETE') . '</a> ';
+            }else{
+                $item['str_action'] = '<a href="' . url("AdminCategory/edit", ["id" => $item['id']]) . '">' . lang('EDIT') . '</a>  <a class="js-ajax-delete" href="' . url("AdminCategory/delete", ["id" => $item['id']]) . '">' . lang('DELETE') . '</a> ';;
+            }
+
             array_push($newCategories, $item);
         }
 
@@ -193,5 +199,16 @@ class PortalCategoryModel extends Model
         return $result;
     }
 
+    /**
+     * 获取一级分类下的所有二级分类
+     * @param $cate_id 一级分类id
+     */
+    public function getTwoCate($cate_id)
+    {
+        $arr_cate_id = $this->where('parent_id',$cate_id)->column('id');
+        if(!empty($arr_cate_id)){
+            return $arr_cate_id;
+        }
+    }
 
 }

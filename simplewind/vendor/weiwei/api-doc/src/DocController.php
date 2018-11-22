@@ -236,8 +236,8 @@ class DocController
         if($action_doc)
         {
             $return = $this->doc->formatReturn($action_doc);
-//            $action_doc['header'] = isset($action_doc['header']) ? array_merge($this->doc->__get('public_header'), $action_doc['header']) : [];
-//            $action_doc['param'] = isset($action_doc['param']) ? array_merge($this->doc->__get('public_param'), $action_doc['param']) : [];
+            $action_doc['header'] = isset($action_doc['header']) ? array_merge($this->doc->__get('public_header'), $action_doc['header']) : [];
+            $action_doc['param'] = isset($action_doc['param']) ? array_merge($this->doc->__get('public_param'), $action_doc['param']) : [];
             return $this->show('info', ['doc'=>$action_doc, 'return'=>$return]);
         }
     }

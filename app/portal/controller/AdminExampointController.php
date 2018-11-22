@@ -8,7 +8,7 @@
 namespace app\portal\controller;
 
 use cmf\controller\AdminBaseController;
-use think\Db;
+use app\portal\model\ExaminationModel;
 
 class AdminExampointController extends AdminBaseController
 {
@@ -27,7 +27,25 @@ class AdminExampointController extends AdminBaseController
      */
     public function index()
     {
+        $examination = new ExaminationModel();
+        $list = $examination
+            ->alias('e')
+            ->field('e.*,c.name')
+            ->join('__PORTAL_CATEGORY__ c','c.id = e.cate_id')
+            ->where('e.type',1)
+            ->select();
 
+        $this->assign('list',$list);
+        return $this->fetch();
+    }
+
+    /**
+     * 添加
+     */
+    public function add()
+    {
+        $this->assign('type',1);
+        return $this->fetch('admin_examintro/add');
     }
 
 

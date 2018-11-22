@@ -6,6 +6,7 @@
  */
 namespace app\portal\model;
 
+use think\Db;
 use think\Model;
 
 class UserCollectionModel extends Model

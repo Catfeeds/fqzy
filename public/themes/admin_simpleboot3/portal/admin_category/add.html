@@ -8,11 +8,11 @@
     </ul>
     <div class="row margin-top-20">
         <div class="col-md-2">
-            <div class="list-group">
-                <a class="list-group-item" href="#A" data-toggle="tab">基本属性</a>
-                <a class="list-group-item" href="#B" data-toggle="tab">SEO设置</a>
-                <a class="list-group-item" href="#C" data-toggle="tab">模板设置</a>
-            </div>
+            <!--<div class="list-group">-->
+                <!--<a class="list-group-item" href="#A" data-toggle="tab">基本属性</a>-->
+                <!--<a class="list-group-item" href="#B" data-toggle="tab">SEO设置</a>-->
+                <!--<a class="list-group-item" href="#C" data-toggle="tab">模板设置</a>-->
+            <!--</div>-->
         </div>
         <div class="col-md-6">
             <form class="js-ajax-form" action="{:url('AdminCategory/addPost')}" method="post">
@@ -34,12 +34,36 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="input-name">分类别名</label>
-                            <div>
-                                <input type="text" class="form-control" id="input-alias" name="alias">
+                        <eq name="$parent_id" value="0">
+                            <div class="form-group">
+                                <label for="input-name">一周价格</label>
+                                <div>
+                                    <input type="text" class="form-control" name="weekprice"
+                                           value="{$cateinfo.weekprice|default=''}">
+                                </div>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label for="input-name">一年价格</label>
+                                <div>
+                                    <input type="text" class="form-control" name="yearprice"
+                                           value="{$cateinfo.yearprice|default=''}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="input-name">考试时间（分钟）</label>
+                                <div>
+                                    <input type="number" class="form-control" name="exam_time"
+                                           value="{$cateinfo.exam_time|default=''}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="input-name">合格分数（分）</label>
+                                <div>
+                                    <input type="number" class="form-control" name="low_score"
+                                           value="{$cateinfo.low_score|default=''}">
+                                </div>
+                            </div>
+                        </eq>
 
                         <div class="form-group">
                             <label for="input-description">描述</label>

@@ -1,0 +1,44 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:;">测试管理</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20" method="post" action="">
+    </form>
+    <form class="js-ajax-form" action="" method="post">
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+                <th width="50">ID</th>
+                <th width="300">测试题库</th>
+                <td>是否在使用</td>
+                <td>答题码</td>
+                <th width="120">操作</th>
+            </tr>
+            </thead>
+            <foreach name="list" item="vo">
+                <tr>
+                    <td><b>{$vo.id}</b></td>
+                    <td>{$vo.name}</td>
+                    <td>
+                        <if condition="$vo.is_use eq 1">
+                            使用中
+                            <else />
+                            暂无使用
+                        </if>
+                    </td>
+                    <td>{$vo.code}</td>
+                    <td>
+                        <a href="{:url('AdminTask/use_this',array('id'=>$vo['id']))}"class="js-ajax-dialog-btn" data-msg="确认使用?">使用</a>
+                    </td>
+                </tr>
+            </foreach>
+        </table>
+        <ul class="pagination">{$page|default=''}</ul>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

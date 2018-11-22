@@ -7,6 +7,7 @@
  */
 namespace app\portal\controller;
 
+use app\portal\model\ExaminationModel;
 use app\portal\model\NewsModel;
 use app\portal\model\OnepageModel;
 use cmf\controller\HomeBaseController;
@@ -30,8 +31,28 @@ class OnepageController extends HomeBaseController
     {
         $onepage = new OnepageModel();
         $content = $onepage->where('id',1)->value('content');
+        $content = cmf_replace_content_file_url(htmlspecialchars_decode($content));
         if(empty($content)){
             $this->apiResponse(1,'获取成功','请通知管理员上传用户注册协议及免责声明');
+        }
+        $this->apiResponse(1,'获取成功',$content);
+    }
+
+    /**
+     * @title 关于我们
+     * @description 接口说明
+     * @author 开发者
+     * @url /Portal/Onepage/aboutUs
+     * @method POST
+     * @return content:文章内容
+     */
+    public function aboutUs()
+    {
+        $onepage = new OnepageModel();
+        $content = $onepage->where('id',2)->value('content');
+        $content = cmf_replace_content_file_url(htmlspecialchars_decode($content));
+        if(empty($content)){
+            $this->apiResponse(1,'获取成功','请通知管理员上传关于我们');
         }
         $this->apiResponse(1,'获取成功',$content);
     }
@@ -76,21 +97,32 @@ class OnepageController extends HomeBaseController
             ->field('title,thumb,content')
             ->where('id',$id)
             ->find();
+        $info['content'] = cmf_replace_content_file_url(htmlspecialchars_decode($info['content']));
         $this->apiResponse(1,'获取成功',$info);
     }
 
     /**
-     * @title 考试介绍
+     * @title 获取考试介绍/考点提炼
      * @description 接口说明
      * @author 开发者
      * @url /Portal/Onepage/examIntro
      * @method POST
-     * @param name:cate_id type:int require:1 default: other: desc:二级分类id
+     * @param name:type type:int require:1 default: other: desc:0考试介绍，1考点提炼
+     * @param name:cate_id type:int require:1 default: other: desc:一级分类id
      */
     public function examIntro()
     {
-        $cate_id = $this->request->param('cate_id','','intval');
-
+        $param = $this->request->param();
+        $examination = new ExaminationModel();
+        $this->isEmptyArray([
+            'cate_id' => $param['cate_id']
+        ]);
+        $info = $examination->field('content')->where([
+            'cate_id' => $param['cate_id'],
+            'type' => $param['type']
+        ])->find();
+        $info['content'] = cmf_replace_content_file_url(htmlspecialchars_decode($info['content']));
+        $this->apiResponse(1,'ok',$info);
     }
 
 }

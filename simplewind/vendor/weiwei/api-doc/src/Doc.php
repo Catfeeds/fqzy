@@ -17,6 +17,10 @@ class Doc
             'app\\portal\\controller\\AskController',
             'app\\portal\\controller\\MineController',
             'app\\portal\\controller\\CommonController',
+            'app\\portal\\controller\\OrderController',
+            'app\\portal\\controller\\TestController',
+            'app\\portal\\controller\\AllaskController',
+            'app\\portal\\controller\\SearchController',
         ],
         'filter_method'=>['_empty'],
         'return_format' => [

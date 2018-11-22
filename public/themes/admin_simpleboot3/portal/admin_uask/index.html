@@ -37,7 +37,8 @@
                 <th>答案2</th>
                 <th>解析</th>
                 <th>提交时间</th>
-                <!--<th width="90">操作</th>-->
+                <th>是否回复</th>
+                <th width="90">操作</th>
             </tr>
             </thead>
             <foreach name="list" item="vo">
@@ -51,10 +52,17 @@
                     <td>{$vo.two_option}</td>
                     <td>{$vo.analysis_content}</td>
                     <td>{$vo.create_time}</td>
-                    <!--<td>-->
-                        <!--<a href="{:url('AdminArticle/edit',array('id'=>$vo['id']))}">{:lang('EDIT')}</a>-->
+                    <td>
+                        <if condition="$vo.reply_status eq 0">
+                            未回复
+                            <else />
+                            已回复
+                        </if>
+                    </td>
+                    <td>
+                        <a href="{:url('AdminAdvice/reply',array('id'=>$vo['id'],'table_name'=>'user_ask'))}">回复</a>
                         <!--<a href="{:url('AdminArticle/delete',array('id'=>$vo['id']))}" class="js-ajax-delete">{:lang('DELETE')}</a>-->
-                    <!--</td>-->
+                    </td>
                 </tr>
             </foreach>
         </table>

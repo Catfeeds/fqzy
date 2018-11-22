@@ -9,38 +9,53 @@
     </ul>
     <div class="row margin-top-20">
         <div class="col-md-2">
-            <div class="list-group">
-                <a class="list-group-item" href="#A" data-toggle="tab">基本属性</a>
-                <a class="list-group-item" href="#B" data-toggle="tab">SEO设置</a>
-                <a class="list-group-item" href="#C" data-toggle="tab">模板设置</a>
-            </div>
+            <!--<div class="list-group">-->
+                <!--<a class="list-group-item" href="#A" data-toggle="tab">基本属性</a>-->
+                <!--<a class="list-group-item" href="#B" data-toggle="tab">SEO设置</a>-->
+                <!--<a class="list-group-item" href="#C" data-toggle="tab">模板设置</a>-->
+            <!--</div>-->
         </div>
         <div class="col-md-6">
             <form class="js-ajax-form" action="{:url('AdminCategory/editPost')}" method="post">
+            <!--<form action="{:url('AdminCategory/editPost')}" method="post">-->
                 <div class="tab-content">
                     <div class="tab-pane active" id="A">
-                        <div class="form-group">
-                            <label for="input-parent"><span class="form-required">*</span>上级</label>
-                            <div>
-                                <select class="form-control" name="parent_id" id="input-parent">
-                                    <option value="0">作为一级分类</option>
-                                    {$categories_tree}
-                                </select>
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label for="input-name"><span class="form-required">*</span>分类名称</label>
                             <div>
                                 <input type="text" class="form-control" id="input-name" name="name" value="{$name}">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="input-name">分类别名</label>
-                            <div>
-                                <input type="text" class="form-control" id="input-alias" name="alias"
-                                       value="{$alias|default=''}">
+                        <eq name="$cateinfo.parent_id" value="0">
+                            <div class="form-group">
+                                <label for="input-name">一周价格</label>
+                                <div>
+                                    <input type="text" class="form-control" name="weekprice"
+                                           value="{$cateinfo.weekprice|default=''}">
+                                </div>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label for="input-name">一年价格</label>
+                                <div>
+                                    <input type="text" class="form-control" name="yearprice"
+                                           value="{$cateinfo.yearprice|default=''}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="input-name">考试时间（分钟）</label>
+                                <div>
+                                    <input type="number" class="form-control" name="exam_time"
+                                           value="{$cateinfo.exam_time|default=''}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="input-name">合格分数（分）</label>
+                                <div>
+                                    <input type="number" class="form-control" name="low_score"
+                                           value="{$cateinfo.low_score|default=''}">
+                                </div>
+                            </div>
+                        </eq>
                         <div class="form-group">
                             <label for="input-description">描述</label>
                             <div>
@@ -120,7 +135,9 @@
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="id" value="{$id}">
+                    <input type="hidden" name="parent_id" value="{$cateinfo.parent_id}">
                     <button type="submit" class="btn btn-primary js-ajax-submit" data-refresh="0">{:lang('SAVE')}
+                    <!--<button type="submit" class="btn btn-primary" data-refresh="0">{:lang('SAVE')}-->
                     </button>
                     <a class="btn btn-default" href="{:url('AdminCategory/index')}">{:lang('BACK')}</a>
                 </div>

@@ -9,6 +9,7 @@ namespace app\portal\controller;
 
 use app\portal\model\AdviceModel;
 use app\portal\model\OrderModel;
+use app\portal\model\ReplyModel;
 use app\portal\model\UsersModel;
 use cmf\controller\HomeBaseController;
 
@@ -32,10 +33,27 @@ class MineController extends HomeBaseController
         $token = $this->request->param('token','');
         $user = new UsersModel();
         $user_id = $this->tokenToUid($token);
-        $info = $user
-            ->field('id,avatar,username,mobile,company')
-            ->where('id',$user_id)
-            ->find();
+        $login_type = $user->where('id',$user_id)->value('login_type');
+        if($login_type == 1){
+            /*微信登录*/
+            $info = $user
+                ->field('id,mobile,company,wechat_avatar as avatar,wechat_name as username')
+                ->where('id',$user_id)
+                ->find();
+        }elseif($login_type == 2){
+            /*qq登录*/
+            $info = $user
+                ->field('id,mobile,company,qq_avatar as avatar,qq_name as username')
+                ->where('id',$user_id)
+                ->find();
+        }else{
+            /*账号密码登录*/
+            $info = $user
+                ->field('id,avatar,username,mobile,company')
+                ->where('id',$user_id)
+                ->find();
+        }
+        $info['mobile'] = substr_replace($info['mobile'], '****', 3, 4);
         $this->apiResponse(1,'获取成功',$info);
     }
 
@@ -100,7 +118,7 @@ class MineController extends HomeBaseController
 
     /**
      * @title 回复列表
-     * @description 接口说明
+     * @description is_look->0代表未查看，1代表已查看
      * @author 开发者
      * @url /Portal/Mine/getReply
      * @method POST
@@ -109,14 +127,39 @@ class MineController extends HomeBaseController
     public function getReply()
     {
         $token = $this->request->param('token','');
-        $advice = new AdviceModel();
+        $reply = new ReplyModel();
         $user_id = $this->tokenToUid($token);
-        $list = $advice
-            ->field('reply_content')
+        $list = $reply
+            ->field('id,reply_title,is_look')
             ->where('user_id',$user_id)
             ->order('id DESC')
             ->select();
         $this->apiResponse(1,'获取成功',$list);
+    }
+
+    /**
+     * @title 回复详情
+     * @description 说明
+     * @author 开发者
+     * @url /Portal/Mine/replyDetail
+     * @method POST
+     * @param name:id type:int require:1 default: other: getReply接口返回的id
+     */
+    public function replyDetail()
+    {
+        $id = $this->request->param('id','');
+        $reply = new ReplyModel();
+        $reply
+            ->where('id',$id)
+            ->data([
+                'is_look' => 1,
+                'look_time' => time()
+            ])->update();
+        $info = $reply
+            ->field('reply_title,reply_content')
+            ->where('id',$id)
+            ->find();
+        $this->apiResponse(1,'获取成功',$info);
     }
 
     /**
@@ -176,5 +219,29 @@ class MineController extends HomeBaseController
         if($res){
             $this->apiResponse(1,'取消成功','');
         }
+    }
+
+    /**
+     * @title 比较用户填写手机号与该账号手机号是否一致
+     * @description 接口说明
+     * @author 开发者
+     * @url /Portal/Mine/compareMobile
+     * @method POST
+     * @param name:token type:string require:1 default: other: desc:token
+     * @param name:user_mobile type:string require:1 default: other: desc:用户填的手机号
+     */
+    public function compareMobile()
+    {
+        $token = $this->request->param('token','');
+        $user_mobile = $this->request->param('user_mobile','');
+        $user = new UsersModel();
+        $user_id = $this->tokenToUid($token);
+        $mobile = $user
+            ->where('id',$user_id)
+            ->value('mobile');
+        if($user_mobile != $mobile){
+            $this->apiResponse(0,'手机号验证不正确','');
+        }
+        $this->apiResponse(1,'验证通过','');
     }
 }

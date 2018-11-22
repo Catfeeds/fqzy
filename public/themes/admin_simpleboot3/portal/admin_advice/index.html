@@ -47,14 +47,14 @@
                     <td>{$vo.content}</td>
                     <td>{$vo.create_time}</td>
                     <td>
-                        <if condition="$vo.reply_content eq ''">
+                        <if condition="$vo.reply_status eq 0">
                             未回复
                             <else />
                             已回复
                         </if>
                     </td>
                     <td>
-                        <a href="{:url('AdminAdvice/reply',array('id'=>$vo['id']))}">回复</a>
+                        <a href="{:url('AdminAdvice/reply',array('id'=>$vo['id'],'table_name'=>'advice'))}">回复</a>
                         <!--<a href="{:url('AdminArticle/delete',array('id'=>$vo['id']))}" class="js-ajax-delete">{:lang('DELETE')}</a>-->
                     </td>
                 </tr>

@@ -36,4 +36,28 @@ class AdminOnepageController extends AdminBaseController
         }
     }
 
+    /**
+     * 关于我们(id为2)
+     */
+    public function aboutus()
+    {
+        $onepage = new OnepageModel();
+        if($this->request->isPost()){
+            $content = $this->request->param('content','');
+            $res = $onepage->where('id',2)->data([
+                'content' => $content,
+                'update_time' => date('Y-m-d H:i:s')
+            ])->update();
+            if($res){
+                $this->success('数据已更新');
+            }
+        }else{
+            $info = $onepage->find(2);
+            $info['content'] = htmlspecialchars_decode($info['content']);
+
+            $this->assign('info',$info);
+            return $this->fetch();
+        }
+    }
+
 }

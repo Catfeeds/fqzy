@@ -8,6 +8,9 @@
 namespace app\portal\controller;
 
 use app\portal\model\AdviceModel;
+use app\portal\model\ErrorAskModel;
+use app\portal\model\ReplyModel;
+use app\portal\model\UserAskModel;
 use cmf\controller\AdminBaseController;
 use think\Db;
 
@@ -55,9 +58,19 @@ class AdminAdviceController extends AdminBaseController
     public function reply()
     {
         $id = $this->request->param('id','','intval');
-        $advice = new AdviceModel();
-        $info = $advice->find($id);
+        $table_name = $this->request->param('table_name','');
+        $reply = new ReplyModel();
+        $info = $reply->where([
+            'table_name' => $table_name,
+            'toid' => $id
+        ])->find();
+        if(empty($info)){
+            $info['toid'] = $id;
+            $info['reply_title'] = '';
+            $info['reply_content'] = '';
+        }
         $this->assign('info',$info);
+        $this->assign('table_name',$table_name);
         return $this->fetch();
     }
 
@@ -76,14 +89,29 @@ class AdminAdviceController extends AdminBaseController
     public function replyPost()
     {
         $post = $this->request->param();
-        $advice = new AdviceModel();
-        $res = $advice->where('id',$post['id'])->data([
-            'reply_content' => $post['reply_content'],
-            'reply_time' => date('Y-m-d H:i:s')
-        ])->update();
-        if(!$res){
-            $this->error('回复失败！');
+        if($post['table_name'] == 'advice'){
+            $bain = new AdviceModel();
+        }elseif ($post['table_name'] == 'user_ask'){
+            $bain = new UserAskModel();
+        }else{
+            $bain = new ErrorAskModel();
         }
+        $reply = new ReplyModel();
+        Db::startTrans();
+        $info = $bain->where('id',$post['id'])->find();
+        $res = $bain->where('id',$post['id'])->setField('reply_status',1);
+        $res2 = $reply->insert([
+            'toid' => $post['id'],
+            'table_name' => $post['table_name'],
+            'reply_title' => $post['reply_title'],
+            'reply_content' => $post['reply_content'],
+            'user_id' => $info['user_id']
+        ]);
+        if(!$res or !$res2){
+            Db::rollback();
+            $this->error('已回复！');
+        }
+        Db::commit();
         $this->success('回复成功！');
     }
 
